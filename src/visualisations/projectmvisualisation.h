@@ -95,6 +95,11 @@ class ProjectMVisualisation : public QGraphicsScene, public BufferConsumer {
   // https://doc.qt.io/qt-5/highdpi.html
   qreal pixel_ratio_;
   VisualisationContainer* container_;
+
+  // cached screen dimensions, because calling projectM_resetGL
+  // every frame is extremely costly
+  int old_width_;
+  int old_height_;
 };
 
 #endif  // PROJECTMVISUALISATION_H

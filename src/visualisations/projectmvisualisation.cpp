@@ -59,7 +59,9 @@ ProjectMVisualisation::ProjectMVisualisation(VisualisationContainer* container)
       duration_(15),
       texture_size_(512),
       pixel_ratio_(container->devicePixelRatio()),
-      container_(container) {
+      container_(container),
+      old_width_(0),
+      old_height_(0) {
   connect(this, SIGNAL(sceneRectChanged(QRectF)),
           SLOT(SceneRectChanged(QRectF)));
 
@@ -155,8 +157,14 @@ void ProjectMVisualisation::drawBackground(QPainter* p, const QRectF&) {
     InitProjectM();
   }
 
-  projectm_->projectM_resetGL(sceneRect().width() * pixel_ratio_,
-                              sceneRect().height() * pixel_ratio_);
+  int new_width = sceneRect().width() * pixel_ratio_;
+  int new_height = sceneRect().height() * pixel_ratio_;
+  if (old_width_ != new_width || old_height_ != new_height) {
+    projectm_->projectM_resetGL(new_width, new_height);
+    old_width_ = new_width;
+    old_height_ = new_height;
+  }
+
   projectm_->renderFrame();
 
   p->endNativePainting();
